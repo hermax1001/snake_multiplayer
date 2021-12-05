@@ -1,0 +1,18 @@
+from loguru import logger
+import socketio
+
+sio = socketio.AsyncServer(async_mode='asgi')
+app = socketio.ASGIApp(sio, static_files={
+    '/': './frontend'
+})
+
+
+@sio.event
+async def connect(sid, environ) -> None:
+    logger.debug(f'Connected {sid}')
+    logger.debug(f'Environ {environ}')
+
+
+@sio.event
+async def disconnect(sid) -> None:
+    logger.debug(f'Disconnected {sid}')
