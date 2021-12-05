@@ -3,7 +3,7 @@ import socketio
 
 sio = socketio.AsyncServer(async_mode='asgi')
 app = socketio.ASGIApp(sio, static_files={
-    '/': './frontend'
+    '/': './frontend/'
 })
 
 
