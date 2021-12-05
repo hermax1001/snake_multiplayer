@@ -1,8 +1,7 @@
-from typing import Optional
+from typing import Optional, Tuple
 from dataclasses import dataclass
-from app.models.field import Point
 
 
 @dataclass
 class Mouse:
-    coordinates = Optional[Point]
+    coordinates = Optional[Tuple]
