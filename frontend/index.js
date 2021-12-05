@@ -14,6 +14,11 @@ document.addEventListener('keydown', (event) => {
         'ArrowDown': 'DOWN',
         'ArrowRight': 'RIGHT',
         'ArrowLeft': 'LEFT'
+    };
+
+    let direction = direction_map[event.key];
+
+    if (!!direction) {
+        socket.emit('change_direction', direction);
     }
-    socket.emit('change direction', directionMap[event.key])
 });
