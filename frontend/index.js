@@ -8,8 +8,12 @@ socket.on("disconnect", () => {
     console.log("disconnected")
 });
 
-socket.on("drawMap", (map) => {
-    console.log(map)
+socket.on("draw_map", (field) => {
+    for (let arr of field) {
+        for (let point of arr) {
+
+        }
+    }
 });
 
 document.addEventListener('keydown', (event) => {
@@ -26,3 +30,5 @@ document.addEventListener('keydown', (event) => {
         socket.emit('change_direction', direction);
     }
 });
+
+socket.emit('draw_map');

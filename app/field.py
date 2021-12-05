@@ -7,8 +7,8 @@ from app.models.mouse import Mouse
 class Field:
     width: int
     height: int
-    snakes: Optional[List[Snake]]
-    mouse: Optional[Mouse]
+    snakes: Optional[List[Snake]] = set()
+    mouse: Optional[Mouse] = None
     coordinates = Set[Tuple]
 
     def __init__(self, width, height):
@@ -28,5 +28,4 @@ class Field:
         return field
 
 
-
-
+game_field = Field(width=20, height=20)

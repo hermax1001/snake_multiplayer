@@ -1,8 +1,7 @@
 from loguru import logger
 import socketio
 import asyncio
-
-from models.field import Field
+from app.field import game_field
 
 sio = socketio.AsyncServer(async_mode='asgi')
 app = socketio.ASGIApp(sio, static_files={
@@ -25,7 +24,9 @@ async def disconnect(sid) -> None:
 async def change_direction(sid, direction) -> None:
     logger.debug(f'Change direction to {direction} for {sid}')
 
-# field = Field(width=20, height=20)
-# while True:
-#     await sio.emit('drawMap', data=field.get_map())
-#     await asyncio.sleep(0.2)
+
+@sio.event
+async def draw_map(sid) -> None:
+    while True:
+        await sio.emit('draw_map', data=game_field.get_map(), to=sid)
+        await asyncio.sleep(0.2)
