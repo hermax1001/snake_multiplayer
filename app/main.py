@@ -16,3 +16,7 @@ async def connect(sid, environ) -> None:
 @sio.event
 async def disconnect(sid) -> None:
     logger.debug(f'Disconnected {sid}')
+
+@sio.event
+async def change_direction(sid, direction) -> None:
+    logger.debug(f'Change direction to {direction} for {sid}')
