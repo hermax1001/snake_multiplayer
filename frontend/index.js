@@ -8,12 +8,25 @@ socket.on("disconnect", () => {
     console.log("disconnected")
 });
 
-socket.on("draw_map", (field) => {
-    for (let arr of field) {
-        for (let point of arr) {
-
-        }
+socket.on("draw_map", (mainMap) => {
+    let old_map = document.getElementById("mainMap");
+    if (!!old_map) {
+        old_map.remove()
     }
+
+    let table = document.createElement('table');
+    table.setAttribute("id", "mainMap");
+
+    for (let arr of mainMap) {
+        let tr = document.createElement('tr');
+        for (let point of arr) {
+            let td = document.createElement('td');
+            td.appendChild(document.createTextNode(point))
+            tr.appendChild(td)
+        }
+        table.appendChild(tr)
+    }
+document.body.appendChild(table);
 });
 
 document.addEventListener('keydown', (event) => {
