@@ -8,5 +8,6 @@ from app.const import Direction
 class Snake:
     direction: Optional[Direction]
     birth_time: datetime
+    coordinates: Optional[Set[Tuple]]
     length: int = 3
-    coordinates = Optional[Set[Tuple]]
+
