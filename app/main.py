@@ -10,6 +10,7 @@ app = socketio.ASGIApp(sio, static_files={
 
 
 async def start_game():
+    # self._task = asyncio.create_task(self.token_refresher(app))
     pass
 
 

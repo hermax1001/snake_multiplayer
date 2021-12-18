@@ -32,5 +32,8 @@ class Field:
             field[y][x] = 'o'
         return field
 
+    def next_step(self):
+        pass
+
 
 game_field = Field(width=20, height=20)
