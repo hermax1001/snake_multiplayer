@@ -1,5 +1,7 @@
+from datetime import datetime
 from typing import List, Optional, Set, Tuple
 
+from app.const import Direction
 from app.models.snake import Snake
 from app.models.mouse import Mouse
 from random import randrange
@@ -9,6 +11,7 @@ class Field:
     width: int
     height: int
     snakes: Optional[List[Snake]] = set()
+    sid_snakes_map: dict = {}
     mouse: Optional[Mouse] = None
     coordinates = Set[Tuple]
     is_game_started = False
@@ -34,6 +37,17 @@ class Field:
 
     def next_step(self):
         pass
+
+    def get_snake_by_sid(self, sid):
+        return self.sid_snakes_map[sid]
+
+    def add_snake(self):
+        snake = Snake(
+            direction=Direction.UP,
+            birth_time=datetime.now(),
+            coordinates={(self.height - 3, 0), (self.height - 2, 0), (self.height - 1, 0)}
+        )
+
 
 
 game_field = Field(width=20, height=20)
