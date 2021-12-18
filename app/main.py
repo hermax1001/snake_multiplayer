@@ -29,4 +29,4 @@ async def change_direction(sid, direction) -> None:
 async def draw_map(sid) -> None:
     while True:
         await sio.emit('draw_map', data=game_field.get_map(), to=sid)
-        await asyncio.sleep(0.2)
+        await asyncio.sleep(0.1)

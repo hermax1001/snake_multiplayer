@@ -16,17 +16,27 @@ socket.on("draw_map", (mainMap) => {
 
     let table = document.createElement('table');
     table.setAttribute("id", "mainMap");
+    table.style.border = "thick solid #0000FF";
 
     for (let arr of mainMap) {
         let tr = document.createElement('tr');
         for (let point of arr) {
             let td = document.createElement('td');
-            td.appendChild(document.createTextNode(point))
+            if (point === '*') {
+                td.style.border = "thick solid #000000";
+            }
+            else if (point === 'o') {
+                td.style.border = "thick solid #FF0000"
+            }
+            else {
+                td.style.border = "thick solid #FFFFFF";
+            }
+            // td.appendChild(document.createTextNode(point))
             tr.appendChild(td)
         }
         table.appendChild(tr)
     }
-document.body.appendChild(table);
+    document.body.appendChild(table);
 });
 
 document.addEventListener('keydown', (event) => {

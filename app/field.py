@@ -2,7 +2,7 @@ from typing import List, Optional, Set, Tuple
 
 from app.models.snake import Snake
 from app.models.mouse import Mouse
-# from random import randrange
+from random import randrange
 
 class Field:
     width: int
@@ -17,9 +17,10 @@ class Field:
         self.coordinates = {(x, y) for y in range(height) for x in range(width)}
 
     def get_map(self):
-        field = [[' '] * self.width] * self.height
-        # for i in range(15):
-        #     field[randrange(0, self.width)][randrange(0, self.width)] = '*'
+        field = [[' '] * self.width for i in range(self.height)]
+        for i in range(15):
+            field[randrange(0, self.width)][randrange(0, self.height)] = '*'
+        field[randrange(0, self.width)][randrange(0, self.height)] = 'o'
         if self.snakes:
             for snake in self.snakes:
                 x, y = snake.coordinates
