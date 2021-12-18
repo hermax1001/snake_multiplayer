@@ -22,6 +22,7 @@ async def connect(sid, environ) -> None:
     if not game_field.is_game_started:
         asyncio.create_task(start_game())
     game_field.add_snake(sid)
+    game_field.add_mouse()
     logger.debug(f'Connected {sid}')
     logger.debug(f'Environ {environ}')
 
@@ -43,7 +44,7 @@ async def check_game_state(sid) -> None:
     while True:
         snake = game_field.get_snake_by_sid(sid)
         if snake.is_dead:
-            await sio.emit('game_over', data=snake.length, to=sid)
+            await sio.emit('game_over', data=len(snake.coordinates), to=sid)
             break
         await sio.emit('check_game_state', data=game_field.get_map(), to=sid)
         await asyncio.sleep(0.1)

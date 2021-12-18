@@ -5,6 +5,7 @@ from collections import deque
 from app.const import Direction
 from app.models.snake import Snake
 from app.models.mouse import Mouse
+from random import randrange
 
 SNAKE = 1
 DEAD_SNAKE = -1
@@ -43,8 +44,12 @@ class Field:
 
     def next_step(self):
         for snake in self.snakes:
-            snake.coordinates.popleft()
             x, y = snake.coordinates[-1]
+            if self.mouse.coordinates == (x, y):
+                self.mouse.coordinates = (randrange(0, self.width), randrange(0, self.height))
+            else:
+                snake.coordinates.popleft()
+
             if snake.direction is Direction.LEFT:
                 snake.coordinates.append((x - 1, y))
             elif snake.direction is Direction.RIGHT:
@@ -55,7 +60,7 @@ class Field:
                 snake.coordinates.append((x, y + 1))
 
             x, y = snake.coordinates[-1]
-            if (x < 0 or x >= self.width) or (y < 0 or y >= self.height):
+            if (x < 0 or x >= self.width) or (y < 0 or y >= self.height) or self.snakes.__contains__(snake.coordinates):
                 snake.is_dead = True
 
     def get_snake_by_sid(self, sid):
@@ -69,6 +74,12 @@ class Field:
         )
         self.sid_snakes_map[sid] = snake
         self.snakes.append(snake)
+
+    def add_mouse(self):
+        mouse = Mouse(
+            coordinates=(randrange(0, self.width), randrange(0, self.height))
+        )
+        self.mouse = mouse
 
 
 game_field = Field(width=20, height=20)

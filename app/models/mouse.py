@@ -4,4 +4,4 @@ from dataclasses import dataclass
 
 @dataclass
 class Mouse:
-    coordinates = Optional[Tuple]
+    coordinates: Optional[Tuple]
