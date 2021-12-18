@@ -54,7 +54,8 @@ class Field:
             else:
                 snake.coordinates.append((x, y + 1))
 
-            if snake.coordinates[-1][0] == self.width or snake.coordinates[-1][1] == self.height:
+            x, y = snake.coordinates[-1]
+            if (x < 0 or x >= self.width) or (y < 0 or y >= self.height):
                 snake.is_dead = True
 
     def get_snake_by_sid(self, sid):
