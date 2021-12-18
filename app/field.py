@@ -4,12 +4,14 @@ from app.models.snake import Snake
 from app.models.mouse import Mouse
 from random import randrange
 
+
 class Field:
     width: int
     height: int
     snakes: Optional[List[Snake]] = set()
     mouse: Optional[Mouse] = None
     coordinates = Set[Tuple]
+    is_game_started = False
 
     def __init__(self, width, height):
         self.width = width

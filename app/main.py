@@ -9,6 +9,10 @@ app = socketio.ASGIApp(sio, static_files={
 })
 
 
+async def start_game():
+    pass
+
+
 @sio.event
 async def connect(sid, environ) -> None:
     logger.debug(f'Connected {sid}')
