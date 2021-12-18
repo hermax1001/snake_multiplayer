@@ -57,7 +57,6 @@ class Field:
             if snake.coordinates[-1][0] == self.width or snake.coordinates[-1][1] == self.height:
                 snake.is_dead = True
 
-
     def get_snake_by_sid(self, sid):
         return self.sid_snakes_map[sid]
 

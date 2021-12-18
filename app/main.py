@@ -14,7 +14,7 @@ app = socketio.ASGIApp(sio, static_files={
 async def start_game():
     while True:
         game_field.next_step()
-        await asyncio.sleep(0.15)
+        await asyncio.sleep(0.2)
 
 
 @sio.event
