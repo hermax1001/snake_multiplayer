@@ -10,12 +10,16 @@ app = socketio.ASGIApp(sio, static_files={
 
 
 async def start_game():
-    # self._task = asyncio.create_task(self.token_refresher(app))
-    pass
+    while True:
+        await game_field.next_step()
+        await asyncio.sleep(0.2)
 
 
 @sio.event
 async def connect(sid, environ) -> None:
+    if not game_field.is_game_started:
+        asyncio.create_task(start_game())
+
     logger.debug(f'Connected {sid}')
     logger.debug(f'Environ {environ}')
 
