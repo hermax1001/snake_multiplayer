@@ -1,4 +1,4 @@
-from typing import Optional, Set, Tuple
+from typing import Optional, Tuple, Deque
 from datetime import datetime
 from dataclasses import dataclass
 from app.const import Direction
@@ -8,6 +8,6 @@ from app.const import Direction
 class Snake:
     direction: Optional[Direction]
     birth_time: datetime
-    coordinates: Optional[Set[Tuple]]
+    coordinates: Optional[Deque[Tuple]]
     length: int = 3
 

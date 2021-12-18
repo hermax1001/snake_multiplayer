@@ -8,6 +8,10 @@ socket.on("disconnect", () => {
     console.log("disconnected")
 });
 
+socket.on("game_over", () => {
+    alert('Game Over!!!')
+});
+
 socket.on("draw_map", (mainMap) => {
     let old_map = document.getElementById("mainMap");
     if (!!old_map) {
@@ -22,10 +26,13 @@ socket.on("draw_map", (mainMap) => {
         let tr = document.createElement('tr');
         for (let point of arr) {
             let td = document.createElement('td');
-            if (point === '*') {
+            if (point === 1) {
                 td.style.border = "thick solid #000000";
             }
-            else if (point === 'o') {
+            else if (point === -1) {
+                td.style.border = "thick solid #0000FF"
+            }
+            else if (point === 2) {
                 td.style.border = "thick solid #FF0000"
             }
             else {
@@ -54,4 +61,4 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
-socket.emit('draw_map');
+socket.emit('check_game_state');

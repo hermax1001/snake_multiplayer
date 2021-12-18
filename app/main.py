@@ -12,7 +12,7 @@ app = socketio.ASGIApp(sio, static_files={
 async def start_game():
     while True:
         await game_field.next_step()
-        await asyncio.sleep(0.2)
+        await asyncio.sleep(0.15)
 
 
 @sio.event
@@ -35,7 +35,7 @@ async def change_direction(sid, direction) -> None:
 
 
 @sio.event
-async def draw_map(sid) -> None:
+async def check_game_state(sid) -> None:
     while True:
         await sio.emit('draw_map', data=game_field.get_map(), to=sid)
         await asyncio.sleep(0.1)
