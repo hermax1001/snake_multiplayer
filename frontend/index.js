@@ -8,11 +8,11 @@ socket.on("disconnect", () => {
     console.log("disconnected")
 });
 
-socket.on("game_over", () => {
-    alert('Game Over!!!')
+socket.on("game_over", (length) => {
+    alert(`Game Over!!! You reached ${length} length`)
 });
 
-socket.on("draw_map", (mainMap) => {
+socket.on("check_game_state", (mainMap) => {
     let old_map = document.getElementById("mainMap");
     if (!!old_map) {
         old_map.remove()
@@ -28,14 +28,11 @@ socket.on("draw_map", (mainMap) => {
             let td = document.createElement('td');
             if (point === 1) {
                 td.style.border = "thick solid #000000";
-            }
-            else if (point === -1) {
+            } else if (point === -1) {
                 td.style.border = "thick solid #0000FF"
-            }
-            else if (point === 2) {
+            } else if (point === 2) {
                 td.style.border = "thick solid #FF0000"
-            }
-            else {
+            } else {
                 td.style.border = "thick solid #FFFFFF";
             }
             // td.appendChild(document.createTextNode(point))

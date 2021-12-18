@@ -37,5 +37,9 @@ async def change_direction(sid, direction) -> None:
 @sio.event
 async def check_game_state(sid) -> None:
     while True:
+        snake = game_field.get_snake_by_sid(sid)
+        if snake.is_dead:
+            await sio.emit('game_over', data=snake.length, to=sid)
+            break
         await sio.emit('draw_map', data=game_field.get_map(), to=sid)
         await asyncio.sleep(0.1)
