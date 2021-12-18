@@ -1,6 +1,8 @@
 from loguru import logger
 import socketio
 import asyncio
+
+from app.const import Direction
 from app.field import game_field
 
 sio = socketio.AsyncServer(async_mode='asgi')
@@ -11,7 +13,7 @@ app = socketio.ASGIApp(sio, static_files={
 
 async def start_game():
     while True:
-        await game_field.next_step()
+        game_field.next_step()
         await asyncio.sleep(0.15)
 
 
@@ -19,7 +21,7 @@ async def start_game():
 async def connect(sid, environ) -> None:
     if not game_field.is_game_started:
         asyncio.create_task(start_game())
-
+    game_field.add_snake(sid)
     logger.debug(f'Connected {sid}')
     logger.debug(f'Environ {environ}')
 
@@ -31,6 +33,8 @@ async def disconnect(sid) -> None:
 
 @sio.event
 async def change_direction(sid, direction) -> None:
+    snake = game_field.get_snake_by_sid(sid)
+    snake.direction = Direction(direction)
     logger.debug(f'Change direction to {direction} for {sid}')
 
 
@@ -41,5 +45,5 @@ async def check_game_state(sid) -> None:
         if snake.is_dead:
             await sio.emit('game_over', data=snake.length, to=sid)
             break
-        await sio.emit('draw_map', data=game_field.get_map(), to=sid)
+        await sio.emit('check_game_state', data=game_field.get_map(), to=sid)
         await asyncio.sleep(0.1)

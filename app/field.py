@@ -15,7 +15,7 @@ EMPTY = 0
 class Field:
     width: int
     height: int
-    snakes: Optional[List[Snake]] = set()
+    snakes: Optional[List[Snake]] = []
     sid_snakes_map: dict = {}
     mouse: Optional[Mouse] = None
     coordinates = Set[Tuple]
@@ -54,6 +54,7 @@ class Field:
             coordinates=deque([(0, self.height - 1), (0, self.height - 2), (0, self.height - 3)])
         )
         self.sid_snakes_map[sid] = snake
+        self.snakes.append(snake)
 
 
 game_field = Field(width=20, height=20)
