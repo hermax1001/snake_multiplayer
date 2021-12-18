@@ -35,8 +35,9 @@ async def disconnect(sid) -> None:
 @sio.event
 async def change_direction(sid, direction) -> None:
     snake = game_field.get_snake_by_sid(sid)
-    snake.direction = Direction(direction)
-    logger.debug(f'Change direction to {direction} for {sid}')
+    if snake:
+        snake.direction = Direction(direction)
+        logger.debug(f'Change direction to {direction} for {sid}')
 
 
 @sio.event
@@ -44,6 +45,7 @@ async def check_game_state(sid) -> None:
     while True:
         snake = game_field.get_snake_by_sid(sid)
         if snake.is_dead:
+            game_field.delete_dead_snakes()
             await sio.emit('game_over', data=len(snake.coordinates), to=sid)
             break
         await sio.emit('check_game_state', data=game_field.get_map(), to=sid)

@@ -29,14 +29,12 @@ class Field:
 
     def get_map(self):
         field = [[0] * self.width for _ in range(self.height)]
-        # for i in range(15):
-        #     field[randrange(0, self.width)][randrange(0, self.height)] = '*'
-        # field[randrange(0, self.width)][randrange(0, self.height)] = 'o'
         if self.snakes:
             for snake in self.snakes:
+                sign = DEAD_SNAKE if snake.is_dead else SNAKE
                 for coordinate in snake.coordinates:
                     x, y = coordinate
-                    field[y][x] = SNAKE
+                    field[y][x] = sign
         if self.mouse:
             x, y = self.mouse.coordinates
             field[y][x] = MOUSE
@@ -63,14 +61,21 @@ class Field:
             if (x < 0 or x >= self.width) or (y < 0 or y >= self.height) or self.snakes.__contains__(snake.coordinates):
                 snake.is_dead = True
 
+    def delete_dead_snakes(self):
+        dead_snakes_sid = {snake.sid for snake in self.snakes if snake.is_dead}
+        for sid in dead_snakes_sid:
+            self.sid_snakes_map.pop(sid)
+        self.snakes = [snake for snake in self.snakes if not snake.is_dead]
+
     def get_snake_by_sid(self, sid):
-        return self.sid_snakes_map[sid]
+        return self.sid_snakes_map.get(sid)
 
     def add_snake(self, sid):
         snake = Snake(
             direction=Direction.UP,
             birth_time=datetime.now(),
-            coordinates=deque([(0, self.height - 1), (0, self.height - 2), (0, self.height - 3)])
+            coordinates=deque([(0, self.height - 1), (0, self.height - 2), (0, self.height - 3)]),
+            sid=sid
         )
         self.sid_snakes_map[sid] = snake
         self.snakes.append(snake)
