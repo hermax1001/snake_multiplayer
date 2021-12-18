@@ -42,7 +42,21 @@ class Field:
         return field
 
     def next_step(self):
-        pass
+        for snake in self.snakes:
+            snake.coordinates.popleft()
+            x, y = snake.coordinates[-1]
+            if snake.direction is Direction.LEFT:
+                snake.coordinates.append((x - 1, y))
+            elif snake.direction is Direction.RIGHT:
+                snake.coordinates.append((x + 1, y))
+            elif snake.direction is Direction.UP:
+                snake.coordinates.append((x, y - 1))
+            else:
+                snake.coordinates.append((x, y + 1))
+
+            if snake.coordinates[-1][0] == self.width or snake.coordinates[-1][1] == self.height:
+                snake.is_dead = True
+
 
     def get_snake_by_sid(self, sid):
         return self.sid_snakes_map[sid]
