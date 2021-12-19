@@ -9,7 +9,12 @@ socket.on("disconnect", () => {
 });
 
 socket.on("game_over", (length) => {
-    alert(`Game Over!!! You reached ${length} length`)
+    if (confirm(`Game Over!!! You reached ${length} length. Continue?`)) {
+        socket.emit('restart');
+        socket.emit('check_game_state');
+    } else {
+        window.close();
+    }
 });
 
 socket.on("check_game_state", (mainMap) => {

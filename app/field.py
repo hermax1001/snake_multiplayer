@@ -1,6 +1,6 @@
-from datetime import datetime
 from typing import List, Optional, Set, Tuple
-from collections import deque
+
+from loguru import logger
 
 from app.const import Direction
 from app.models.snake import Snake
@@ -41,6 +41,8 @@ class Field:
         return field
 
     def next_step(self):
+        logger.debug(f'NEXT_STEP')
+
         for snake in self.snakes:
             x, y = snake.coordinates[-1]
             if self.mouse.coordinates == (x, y):
@@ -61,22 +63,15 @@ class Field:
             if (x < 0 or x >= self.width) or (y < 0 or y >= self.height) or self.snakes.__contains__(snake.coordinates):
                 snake.is_dead = True
 
+        game_field.delete_dead_snakes()
+
     def delete_dead_snakes(self):
-        dead_snakes_sid = {snake.sid for snake in self.snakes if snake.is_dead}
-        for sid in dead_snakes_sid:
-            self.sid_snakes_map.pop(sid)
         self.snakes = [snake for snake in self.snakes if not snake.is_dead]
 
     def get_snake_by_sid(self, sid):
         return self.sid_snakes_map.get(sid)
 
-    def add_snake(self, sid):
-        snake = Snake(
-            direction=Direction.UP,
-            birth_time=datetime.now(),
-            coordinates=deque([(0, self.height - 1), (0, self.height - 2), (0, self.height - 3)]),
-            sid=sid
-        )
+    def add_snake(self, sid, snake: Snake):
         self.sid_snakes_map[sid] = snake
         self.snakes.append(snake)
 
@@ -87,4 +82,4 @@ class Field:
         self.mouse = mouse
 
 
-game_field = Field(width=20, height=20)
+game_field = Field(width=25, height=25)
