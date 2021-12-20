@@ -8,6 +8,7 @@ import asyncio
 from app.const import Direction
 from app.field import game_field
 from app.models.snake import Snake
+from app.utils import is_opposite_direction
 
 sio = socketio.AsyncServer(async_mode='asgi')
 app = socketio.ASGIApp(sio, static_files={
@@ -18,7 +19,7 @@ app = socketio.ASGIApp(sio, static_files={
 async def start_game():
     while True:
         game_field.next_step()
-        await asyncio.sleep(0.175)
+        await asyncio.sleep(0.115)
 
 
 @sio.event
@@ -60,17 +61,18 @@ async def restart(sid) -> None:
 async def change_direction(sid, direction) -> None:
     snake = game_field.get_snake_by_sid(sid)
     if snake:
-        snake.direction = Direction(direction)
-        logger.debug(f'Change direction to {direction} for {sid}')
+        new_direction = Direction(direction)
+        if not is_opposite_direction(snake.direction, new_direction):
+            snake.direction = Direction(direction)
+            logger.debug(f'Change direction to {direction} for {sid}')
 
 
 @sio.event
 async def check_game_state(sid) -> None:
     while True:
-        logger.debug(f'CHECK STATE for {sid}')
         snake = game_field.get_snake_by_sid(sid)
         if snake.is_dead:
             await sio.emit('game_over', data=len(snake.coordinates), to=sid)
             break
         await sio.emit('check_game_state', data=game_field.get_map(), to=sid)
-        await asyncio.sleep(0.175)
+        await asyncio.sleep(0.05)

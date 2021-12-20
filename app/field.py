@@ -1,14 +1,12 @@
 from typing import List, Optional, Set, Tuple
 
-from loguru import logger
-
 from app.const import Direction
 from app.models.snake import Snake
 from app.models.mouse import Mouse
 from random import randrange
 
 SNAKE = 1
-DEAD_SNAKE = -1
+SNAKE_HEAD = -1
 MOUSE = 2
 EMPTY = 0
 
@@ -31,17 +29,15 @@ class Field:
         field = [[0] * self.width for _ in range(self.height)]
         if self.snakes:
             for snake in self.snakes:
-                sign = DEAD_SNAKE if snake.is_dead else SNAKE
-                for coordinate in snake.coordinates:
+                for idx, coordinate in enumerate(snake.coordinates):
                     x, y = coordinate
-                    field[y][x] = sign
-        if self.mouse:
+                    field[y][x] = SNAKE if idx != len(snake.coordinates) - 1 else SNAKE_HEAD
+        if self.mouse and self.mouse.is_dead is False:
             x, y = self.mouse.coordinates
             field[y][x] = MOUSE
         return field
 
     def next_step(self):
-        logger.debug(f'NEXT_STEP')
 
         for snake in self.snakes:
             x, y = snake.coordinates[-1]
@@ -82,4 +78,4 @@ class Field:
         self.mouse = mouse
 
 
-game_field = Field(width=25, height=25)
+game_field = Field(width=55, height=35)
