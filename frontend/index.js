@@ -25,27 +25,26 @@ socket.on("check_game_state", (mainMap) => {
 
     let table = document.createElement('table');
     table.setAttribute("id", "mainMap");
-    table.style.border = "thick solid black";
+    // table.style.border = "thick solid black";
     table.style.marginLeft = "auto";
     table.style.marginRight = "auto";
-    table.style.borderRadius = '5px'
 
 
     for (let arr of mainMap) {
         let tr = document.createElement('tr');
         for (let point of arr) {
             let td = document.createElement('td');
-            td.style.width = '9px'
-            td.style.height = '9px'
+            td.style.width = '5px'
+            td.style.height = '5px'
             td.style.borderRadius = '7px'
             if (point === 1) {
-                td.style.border = "thick solid black";
+                td.className = "snake"
             } else if (point === -1) {
-                td.style.border = "thick solid black"
-                td.style.backgroundColor = "black";
+                td.className = "snake"
+                td.style.backgroundColor = "#41403E";
             } else if (point === 2) {
-                td.style.border = "thick solid #FF0000"
-                td.style.backgroundColor = "#AA0000";
+                td.style.border = "solid #FFFFFF"
+                td.style.backgroundColor = "#339966";
             } else {
                 td.style.border = "thick solid #FFFFFF";
             }
