@@ -1,4 +1,4 @@
-import random
+from collections import defaultdict
 from datetime import timedelta, datetime
 from typing import List, Optional, Set, Tuple
 
@@ -47,10 +47,15 @@ class Game:
         if randrange(1, 11) == 1:
             self.add_mouse()
 
-        mice_coordinates = {mouse.coordinates for mouse in self.mice}
+        mice_coordinates_map = defaultdict(list)
+        for mouse in self.mice:
+            mice_coordinates_map[mouse.coordinates].append(mouse)
         for snake in self.snakes:
             x, y = snake.coordinates[-1]
-            if (x, y) not in mice_coordinates:
+            if (x, y) in mice_coordinates_map:
+                for mouse in mice_coordinates_map[(x, y)]:
+                    mouse.is_dead = True
+            else:
                 snake.coordinates.popleft()
 
             if snake.direction is Direction.LEFT:
