@@ -1,22 +1,29 @@
+import random
+from datetime import timedelta, datetime
 from typing import List, Optional, Set, Tuple
 
-from app.const import Direction
+from app.const import Direction, MouseType
 from app.models.snake import Snake
 from app.models.mouse import Mouse
-from random import randrange
+from random import randrange, choice
 
 SNAKE = 1
 SNAKE_HEAD = -1
-MOUSE = 2
 EMPTY = 0
+GREEN_MOUSE = 10
+RED_MOUSE = 11
+BlUE_MOUSE = 12
+YELLOW_MOUSE = 13
+BROWN_MOUSE = 14
+GREY_MOUSE = 15
 
 
-class Field:
+class Game:
     width: int
     height: int
     snakes: Optional[List[Snake]] = []
     sid_snakes_map: dict = {}
-    mouse: Optional[Mouse] = None
+    mice: Optional[List[Mouse]] = []
     coordinates = Set[Tuple]
     is_game_started = False
 
@@ -27,23 +34,23 @@ class Field:
 
     def get_map(self):
         field = [[0] * self.width for _ in range(self.height)]
-        if self.snakes:
-            for snake in self.snakes:
-                for idx, coordinate in enumerate(snake.coordinates):
-                    x, y = coordinate
-                    field[y][x] = SNAKE if idx != len(snake.coordinates) - 1 else SNAKE_HEAD
-        if self.mouse and self.mouse.is_dead is False:
-            x, y = self.mouse.coordinates
-            field[y][x] = MOUSE
+        for snake in self.snakes:
+            for idx, coordinate in enumerate(snake.coordinates):
+                x, y = coordinate
+                field[y][x] = SNAKE if idx != len(snake.coordinates) - 1 else SNAKE_HEAD
+        for mouse in self.mice:
+            x, y = mouse.coordinates
+            field[y][x] = mouse.type.value
         return field
 
     def next_step(self):
+        if randrange(1, 11) == 1:
+            self.add_mouse()
 
+        mice_coordinates = {mouse.coordinates for mouse in self.mice}
         for snake in self.snakes:
             x, y = snake.coordinates[-1]
-            if self.mouse.coordinates == (x, y):
-                self.mouse.coordinates = (randrange(0, self.width), randrange(0, self.height))
-            else:
+            if (x, y) not in mice_coordinates:
                 snake.coordinates.popleft()
 
             if snake.direction is Direction.LEFT:
@@ -56,13 +63,24 @@ class Field:
                 snake.coordinates.append((x, y + 1))
 
             x, y = snake.coordinates[-1]
-            if (x < 0 or x >= self.width) or (y < 0 or y >= self.height) or self.snakes.__contains__(snake.coordinates):
+            if (x < 0 or x >= self.width) or (y < 0 or y >= self.height):
                 snake.is_dead = True
 
-        game_field.delete_dead_snakes()
+        self.kill_mice()
+        self.delete_dead_mice()
+        self.delete_dead_snakes()
+
+    def kill_mice(self):
+        current_time = datetime.now()
+        for mouse in self.mice:
+            if current_time >= mouse.death_time:
+                mouse.is_dead = True
 
     def delete_dead_snakes(self):
         self.snakes = [snake for snake in self.snakes if not snake.is_dead]
+
+    def delete_dead_mice(self):
+        self.mice = [mouse for mouse in self.mice if not mouse.is_dead]
 
     def get_snake_by_sid(self, sid):
         return self.sid_snakes_map.get(sid)
@@ -73,9 +91,11 @@ class Field:
 
     def add_mouse(self):
         mouse = Mouse(
-            coordinates=(randrange(0, self.width), randrange(0, self.height))
+            coordinates=(randrange(0, self.width), randrange(0, self.height)),
+            death_time=datetime.now() + timedelta(seconds=randrange(1, 11)),
+            type=choice(list(MouseType))
         )
-        self.mouse = mouse
+        self.mice.append(mouse)
 
 
-game_field = Field(width=55, height=35)
+game_field = Game(width=55, height=35)

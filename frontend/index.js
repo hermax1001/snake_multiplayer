@@ -42,9 +42,27 @@ socket.on("check_game_state", (mainMap) => {
             } else if (point === -1) {
                 td.className = "snake"
                 td.style.backgroundColor = "#41403E";
-            } else if (point === 2) {
+            } else if (point >= 10) {
                 td.style.border = "solid #FFFFFF"
-                td.style.backgroundColor = "#339966";
+                if (point === 10){
+                    td.style.backgroundColor = "#339966";
+                }
+                else if (point === 11) {
+                    td.style.backgroundColor = "#DC143C";
+                }
+                else if (point === 12) {
+                    td.style.backgroundColor = "#4169E1";
+                }
+                else if (point === 13) {
+                    td.style.backgroundColor = "#FFD700";
+                }
+                else if (point === 14) {
+                    td.style.backgroundColor = "#8B4513";
+                }
+                else if (point === 15) {
+                    td.style.backgroundColor = "#696969";
+                }
+
             } else {
                 td.style.border = "thick solid #FFFFFF";
             }

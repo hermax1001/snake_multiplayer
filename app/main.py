@@ -6,7 +6,7 @@ import socketio
 import asyncio
 
 from app.const import Direction
-from app.field import game_field
+from app.game import game_field
 from app.models.snake import Snake
 from app.utils import is_opposite_direction
 
