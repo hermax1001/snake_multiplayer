@@ -37,7 +37,11 @@ class Game:
         for snake in self.snakes:
             for idx, coordinate in enumerate(snake.coordinates):
                 x, y = coordinate
-                field[y][x] = SNAKE if idx != len(snake.coordinates) - 1 else SNAKE_HEAD
+                field[y][x] = SNAKE
+            # head_coordinates
+            x, y = snake.coordinates[-1]
+            field[y][x] = SNAKE_HEAD
+
         for mouse in self.mice:
             x, y = mouse.coordinates
             field[y][x] = mouse.type.value
@@ -67,10 +71,7 @@ class Game:
             else:
                 snake.coordinates.append((x, y + 1))
 
-            x, y = snake.coordinates[-1]
-            if (x < 0 or x >= self.width) or (y < 0 or y >= self.height):
-                snake.is_dead = True
-
+        self.kill_snakes()
         self.kill_mice()
         self.delete_dead_mice()
         self.delete_dead_snakes()
@@ -80,6 +81,18 @@ class Game:
         for mouse in self.mice:
             if current_time >= mouse.death_time:
                 mouse.is_dead = True
+
+    def kill_snakes(self):
+        # head coordinates
+        for snake in self.snakes:
+            enemy_coordinates = {c for s in self.snakes for c in s.coordinates if s is not snake}
+            x, y = snake.coordinates[-1]
+            if (
+                (x < 0 or x >= self.width)
+                or (y < 0 or y >= self.height)
+                or (x, y) in enemy_coordinates
+            ):
+                snake.is_dead = True
 
     def delete_dead_snakes(self):
         self.snakes = [snake for snake in self.snakes if not snake.is_dead]
