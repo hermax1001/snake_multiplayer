@@ -71,8 +71,14 @@ async def change_direction(sid, direction) -> None:
 async def check_game_state(sid) -> None:
     while True:
         snake = game_field.get_snake_by_sid(sid)
+        length = len(snake.coordinates)
+        max_length = max(len(s.coordinates) for s in game_field.snakes) if game_field.snakes else 0
         if snake.is_dead:
-            await sio.emit('game_over', data=len(snake.coordinates), to=sid)
+            await sio.emit('game_over', data=length, to=sid)
             break
-        await sio.emit('check_game_state', data=game_field.get_map(), to=sid)
+        await sio.emit(
+            'check_game_state',
+            data={'main_map': game_field.get_map(), 'length': length, 'max_length': max_length},
+            to=sid
+        )
         await asyncio.sleep(0.05)
