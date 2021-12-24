@@ -74,7 +74,9 @@ socket.on("check_game_state", (data) => {
     let lengthCounter = document.createElement("p");
     lengthCounter.setAttribute("id", "lengthCounter");
     lengthCounter.appendChild(
-        document.createTextNode(`Your length: ${data['length']}. Best on map ${data['max_length']}`)
+        document.createTextNode(
+            `Your length: ${data['length']}, kills ${data['kills']}.
+                  Best on map length: ${data['max_length']}, kills ${data['kills']}`)
     )
     document.body.appendChild(table);
     document.body.appendChild(lengthCounter);

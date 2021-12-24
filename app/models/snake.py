@@ -10,5 +10,6 @@ class Snake:
     birth_time: datetime
     coordinates: Optional[Deque[Tuple]]
     sid: Any
+    kills: int = 0
     is_dead: bool = False
 
