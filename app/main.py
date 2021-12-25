@@ -61,10 +61,10 @@ async def restart(sid) -> None:
 async def change_direction(sid, direction) -> None:
     snake = game_field.get_snake_by_sid(sid)
     if snake:
-        new_direction = Direction(direction)
-        if not is_opposite_direction(snake.direction, new_direction):
-            snake.direction = Direction(direction)
-            logger.debug(f'Change direction to {direction} for {sid}')
+        # new_direction = Direction(direction)
+        # if not is_opposite_direction(snake.direction, new_direction):
+        snake.direction = Direction(direction)
+        logger.debug(f'Change direction to {direction} for {sid}')
 
 
 @sio.event

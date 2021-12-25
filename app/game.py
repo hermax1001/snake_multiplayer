@@ -84,15 +84,24 @@ class Game:
 
     def kill_snakes(self):
         # head coordinates
+        coord_snake_map = defaultdict(list)
         for snake in self.snakes:
-            enemy_coordinates = {c for s in self.snakes for c in s.coordinates if s is not snake}
+            for coord in snake.coordinates:
+                coord_snake_map[coord].append(snake)
+
+        for snake in self.snakes:
             x, y = snake.coordinates[-1]
             if (
                 (x < 0 or x >= self.width)
                 or (y < 0 or y >= self.height)
-                or (x, y) in enemy_coordinates
             ):
                 snake.is_dead = True
+            snakes_in_head = coord_snake_map[(x, y)]
+            if len(snakes_in_head) > 1:
+                for s in snakes_in_head:
+                    if s is not snake:
+                        snake.is_dead = True
+                        s.kills += 1
 
     def delete_dead_snakes(self):
         self.snakes = [snake for snake in self.snakes if not snake.is_dead]
