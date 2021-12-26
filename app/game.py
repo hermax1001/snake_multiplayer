@@ -95,13 +95,19 @@ class Game:
                 (x < 0 or x >= self.width)
                 or (y < 0 or y >= self.height)
             ):
-                snake.is_dead = True
+                self.kill_snake(snake)
             snakes_in_head = coord_snake_map[(x, y)]
             if len(snakes_in_head) > 1:
                 for s in snakes_in_head:
                     if s is not snake:
-                        snake.is_dead = True
-                        s.kills += 1
+                        self.kill_snake(snake, s)
+
+    def kill_snake(self, victim: Snake, killer: Optional[Snake] = None):
+        victim.is_dead = True
+        for i in range(len(victim.coordinates) - 2):
+            self.add_mouse(victim.coordinates[i])
+        if killer:
+            killer.kills += 1
 
     def delete_dead_snakes(self):
         self.snakes = [snake for snake in self.snakes if not snake.is_dead]
@@ -116,9 +122,9 @@ class Game:
         self.sid_snakes_map[sid] = snake
         self.snakes.append(snake)
 
-    def add_mouse(self):
+    def add_mouse(self, coordinates=None):
         mouse = Mouse(
-            coordinates=(randrange(0, self.width), randrange(0, self.height)),
+            coordinates=coordinates or (randrange(0, self.width), randrange(0, self.height)),
             death_time=datetime.now() + timedelta(seconds=randrange(1, 11)),
             type=choice(list(MouseType))
         )
